@@ -6,7 +6,6 @@
     <title>Jogo da Velha DOIS</title>
     
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
-    
     <link rel="stylesheet" href="css/home.css">
 </head>
 <body>
@@ -16,16 +15,21 @@
 
     <main class="login-card">
         <h1 class="game-logo">Jogo da Velha <b>DOIS</b></h1>
-        <p class="subtitle">Criar sala</p>
 
-        <form action="#" method="POST">
+        <form action="/play" method="POST">
             <div class="input-group">
-                <input type="text" placeholder="Digite seu nickname" required>
+                <input type="text" name="nickname" placeholder="Seu nickname" required maxlength="15">
+            </div>
+
+            <div class="input-group">
+                <input type="text" name="room_code" placeholder="Código da sala (para entrar)">
             </div>
             
-            <button type="submit" class="btn-play">
-                JOGAR
-            </button>
+            <div class="actions">
+                <button type="submit" class="btn-play">
+                    JOGAR
+                </button>
+            </div>
         </form>
     </main>
 
