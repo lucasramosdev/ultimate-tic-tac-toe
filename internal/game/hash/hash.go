@@ -5,6 +5,7 @@ import (
 	"math/rand"
 	"strings"
 	"time"
+	"errors"
 )
 
 const (
@@ -19,6 +20,18 @@ func CreateGameToken() *string {
 	alphabet := getShuffledAlphabet(secret)
 	token := encodeBase62(randomNum, alphabet)
 	return &token
+}
+
+func ValidateGameToken(token string) bool {
+	secret := "minha-chave-secreta-do-jogo"
+	alphabet := getShuffledAlphabet(secret)
+
+	num, err := decodeBase62(token, alphabet)
+	if err != nil {
+		return false
+	}
+
+	return num >= Min4CharsVal && num < Max7CharsVal
 }
 
 func generateRandomNumberInRange() int64 {
@@ -58,6 +71,21 @@ func encodeBase62(num int64, alphabet string) string {
 	}
 
 	return reverseString(encodedBuilder.String())
+}
+
+func decodeBase62(token string, alphabet string) (int64, error) {
+	base := int64(len(alphabet))
+	var num int64
+
+	for _, char := range token {
+		index := strings.IndexRune(alphabet, char)
+		if index == -1 {
+			return 0, errors.New("invalid character in token")
+		}
+		num = num*base + int64(index)
+	}
+
+	return num, nil
 }
 
 func reverseString(s string) string {
