@@ -1,0 +1,2 @@
+POST http://localhost:8080/new-game
+Content-Type: application/json
