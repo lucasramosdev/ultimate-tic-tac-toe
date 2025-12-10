@@ -7,4 +7,6 @@ import (
 
 func GameRoutes(r *gin.Engine) {
 	r.POST("/play", game.PlayHandler)
+	r.GET("/game/:token", game.ServeGame)
+	r.GET("/ws/:token", game.ServeWS)
 }

@@ -1,0 +1,132 @@
+:root {
+    --bg-color: #121212;
+    --text-color: #ffffff;
+    --primary-color: #00bfa5;
+    /* Teal/Greenish */
+    --secondary-color: #ffca28;
+    /* Amber/Yellowish */
+    --accent-color: #6200ea;
+    --board-bg: #1e1e1e;
+    --cell-bg: #2d2d2d;
+    --cell-hover: #3d3d3d;
+}
+
+body {
+    font-family: 'Inter', sans-serif;
+    background-color: var(--bg-color);
+    color: var(--text-color);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    margin: 0;
+}
+
+.container {
+    text-align: center;
+}
+
+h1 {
+    font-size: 3rem;
+    margin-bottom: 1rem;
+    background: linear-gradient(45deg, var(--primary-color), var(--secondary-color));
+    background-clip: text;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+.status {
+    font-size: 1.5rem;
+    margin-bottom: 2rem;
+    min-height: 2rem;
+}
+
+
+.game-container {
+    display: inline-block;
+    padding: 20px;
+}
+
+.outer-board {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 15px;
+    background-color: var(--board-bg);
+    padding: 15px;
+    border-radius: 15px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+}
+
+.outer-cell {
+    position: relative;
+    background-color: var(--cell-bg);
+    padding: 5px;
+    border-radius: 8px;
+    transition: box-shadow 0.3s;
+}
+
+.outer-cell.active {
+    box-shadow: 0 0 10px 2px var(--primary-color);
+    border: 1px solid var(--primary-color);
+}
+
+.inner-board {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 4px;
+}
+
+.inner-cell {
+    width: 40px;
+    height: 40px;
+    background-color: #333;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 1.5rem;
+    cursor: pointer;
+    border-radius: 4px;
+    transition: background-color 0.2s;
+}
+
+.inner-cell:hover {
+    background-color: #444;
+}
+
+.inner-cell.x {
+    color: var(--primary-color);
+}
+
+.inner-cell.o {
+    color: var(--secondary-color);
+}
+
+.winner-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 6rem;
+    background-color: rgba(0, 0, 0, 0.7);
+    border-radius: 8px;
+    pointer-events: none;
+    /* Let clicks pass through if needed, though usually won means no clicks */
+}
+
+.winner-overlay.x {
+    color: var(--primary-color);
+}
+
+.winner-overlay.o {
+    color: var(--secondary-color);
+}
+
+.message {
+    margin-top: 2rem;
+    font-size: 1.2rem;
+    color: #aaa;
+}
