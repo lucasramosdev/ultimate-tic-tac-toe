@@ -1,4 +1,4 @@
-package game
+package client
 
 import (
 	"log"
@@ -14,24 +14,8 @@ const (
 	maxMessageSize = 512
 )
 
-type Client struct {
-	Manager *GameManager
-	Room    *Room
-	Conn    *websocket.Conn
-	Send    chan []byte
-	Player  string
-}
-
-type Message struct {
-	Type       string `json:"type"`
-	Payload    string `json:"payload"`
-	OuterIndex int    `json:"outerIndex,omitempty"`
-	InnerIndex int    `json:"innerIndex,omitempty"`
-}
-
 func (c *Client) ReadPump() {
 	defer func() {
-		c.Manager.Unregister <- c
 		c.Conn.Close()
 	}()
 	c.Conn.SetReadLimit(maxMessageSize)
@@ -47,7 +31,9 @@ func (c *Client) ReadPump() {
 			break
 		}
 
-		c.Room.HandleMessage(c, msg)
+		msg.Room = c.Code
+		msg.Player = c.Player
+		c.Room <- msg
 	}
 }
 

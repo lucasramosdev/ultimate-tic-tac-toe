@@ -1,13 +1,4 @@
-package game
-
-type GameState struct {
-	Boards     [9][9]string `json:"boards"`      // 9 inner boards, each with 9 cells
-	OuterBoard [9]string    `json:"outer_board"` // Status of the 9 inner boards ("X", "O", "Draw", or "")
-	Turn       string       `json:"turn"`        // "X" or "O"
-	Winner     string       `json:"winner"`      // "X", "O", "Draw", or ""
-	IsGameOver bool         `json:"is_game_over"`
-	NextBoard  int          `json:"next_board"` // Index of valid board for next move (-1 for any)
-}
+package state
 
 func NewGameState() *GameState {
 	var boards [9][9]string
@@ -15,8 +6,8 @@ func NewGameState() *GameState {
 	return &GameState{
 		Boards:     boards,
 		OuterBoard: [9]string{},
-		Turn:       "X", // X starts
-		NextBoard:  -1,  // First move can be anywhere
+		Turn:       "X",
+		NextBoard:  -1,
 	}
 }
 

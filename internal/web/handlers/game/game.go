@@ -5,8 +5,9 @@ import (
 
 	"github.com/gin-gonic/gin"
 	"github.com/gorilla/websocket"
-	"github.com/lucasramosdev/jogo-da-velha-dois/internal/game"
+	"github.com/lucasramosdev/jogo-da-velha-dois/internal/game/client"
 	"github.com/lucasramosdev/jogo-da-velha-dois/internal/game/hash"
+	"github.com/lucasramosdev/jogo-da-velha-dois/internal/game/manager"
 )
 
 func PlayHandler(c *gin.Context) {
@@ -38,7 +39,7 @@ func ServeGame(c *gin.Context) {
 		return
 	}
 
-	game.Instance.GetRoom(roomCode)
+	manager.Instance.GetRoom(roomCode)
 
 	c.HTML(http.StatusOK, "game.tmpl", gin.H{
 		"RoomCode": roomCode,
@@ -64,11 +65,14 @@ func ServeWS(c *gin.Context) {
 		return
 	}
 
-	client := &game.Client{Manager: game.Instance, Conn: conn, Send: make(chan []byte, 256)}
-	client.Room = game.Instance.GetRoom(roomCode)
-
-	client.Manager.Register <- client
+	client := &client.Client{Conn: conn, Send: make(chan []byte, 256), Code: roomCode}
+	room := manager.Instance.GetRoom(roomCode)
+	manager.Instance.Register <- client
 
 	go client.WritePump()
-	go client.ReadPump()
+	go func() {
+		client.ReadPump()
+		manager.Instance.Unregister <- client
+	}()
+	go room.HandleMessage()
 }
