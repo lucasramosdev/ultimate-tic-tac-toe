@@ -1,6 +1,7 @@
 package game
 
 import (
+	"log"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
@@ -62,11 +63,12 @@ func ServeWS(c *gin.Context) {
 
 	conn, err := upgrader.Upgrade(c.Writer, c.Request, nil)
 	if err != nil {
+		log.Printf("Failed to upgrade ws: %v", err)
 		return
 	}
 
 	client := &client.Client{Conn: conn, Send: make(chan []byte, 256), Code: roomCode}
-	room := manager.Instance.GetRoom(roomCode)
+	manager.Instance.GetRoom(roomCode)
 	manager.Instance.Register <- client
 
 	go client.WritePump()
@@ -74,5 +76,5 @@ func ServeWS(c *gin.Context) {
 		client.ReadPump()
 		manager.Instance.Unregister <- client
 	}()
-	go room.HandleMessage()
+
 }
