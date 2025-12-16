@@ -1,0 +1,19 @@
+services:
+  app:
+    container_name: app
+    build:
+      context: .
+      dockerfile: build/Dockerfile
+    networks:
+      - web_app
+    ports:
+      - "6000:8080"
+    restart: always
+    healthcheck:
+      test: curl -fsS localhost:8080/ping
+    volumes:
+      - ./web:/web
+
+networks:
+  web_app:
+    driver: bridge
