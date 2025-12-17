@@ -196,3 +196,27 @@ input:focus {
 .join-form .input-group {
     margin-bottom: 0.8rem;
 }
+
+/* Nickname Section Styling */
+.nickname-section {
+    margin-bottom: 2.5rem;
+    /* Large spacing to separate from actions */
+    text-align: left;
+}
+
+.input-label {
+    display: block;
+    margin-bottom: 0.5rem;
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: #cbd5e1;
+    margin-left: 4px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.action-section {
+    animation: floatUp 1s ease-out;
+    animation-delay: 0.2s;
+    animation-fill-mode: backwards;
+}

@@ -19,24 +19,42 @@
         <h1 class="game-logo"><b>Ultimate</b> Jogo da Velha</h1>
         <p class="subtitle">Desafie seus amigos em partidas épicas</p>
 
-        <form action="/play" method="POST" class="create-form">
-            <button type="submit" class="btn-play btn-create">
-                CRIAR NOVA SALA
-            </button>
-        </form>
-
-        <div class="divider">
-            <span>OU</span>
-        </div>
-
-        <form action="/play" method="POST" class="join-form">
-            <div class="input-group">
-                <input type="text" name="room_code" placeholder="Tem um código? Digite aqui" required>
+        <form action="/play" method="POST" id="gameForm">
+            <div class="input-group nickname-section">
+                <label for="nickname" class="input-label">Identificação</label>
+                <input type="text" id="nickname" name="nickname" placeholder="Digite seu nickname..." required>
             </div>
-            <button type="submit" class="btn-play btn-join">
-                ENTRAR NA SALA
-            </button>
+
+            <div class="action-section">
+                <button type="submit" class="btn-play btn-create" onclick="setCreateMode()">
+                    CRIAR NOVA SALA
+                </button>
+
+                <div class="divider">
+                    <span>OU</span>
+                </div>
+
+                <div class="input-group">
+                    <input type="text" name="room_code" placeholder="Tem um código? Digite aqui" required>
+                </div>
+                <button type="submit" class="btn-play btn-join">
+                    ENTRAR NA SALA
+                </button>
+            </div>
         </form>
+
+        <script>
+            function setCreateMode() {
+                const codeInput = document.querySelector('input[name="room_code"]');
+                // Temporarily disable so it's not sent, allowing Create logic (empty/missing code) to work
+                // and bypassing 'required' validation for this field.
+                codeInput.disabled = true;
+
+                setTimeout(() => {
+                    codeInput.disabled = false;
+                }, 100);
+            }
+        </script>
     </main>
 
 </body>

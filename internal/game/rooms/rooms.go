@@ -58,12 +58,24 @@ func (r *Room) HandleMessage() {
 }
 
 func (r *Room) BroadcastState() {
+	var playerXName, playerOName string
+	if r.PlayerX != nil {
+		playerXName = r.PlayerX.Name
+	}
+	if r.PlayerO != nil {
+		playerOName = r.PlayerO.Name
+	}
+
 	stateJSON, _ := json.Marshal(struct {
-		Type  string           `json:"type"`
-		State *state.GameState `json:"state"`
+		Type        string           `json:"type"`
+		State       *state.GameState `json:"state"`
+		PlayerXName string           `json:"playerXName"`
+		PlayerOName string           `json:"playerOName"`
 	}{
-		Type:  "state",
-		State: r.GameState,
+		Type:        "state",
+		State:       r.GameState,
+		PlayerXName: playerXName,
+		PlayerOName: playerOName,
 	})
 	r.Broadcast <- stateJSON
 }

@@ -20,7 +20,7 @@ func PlayHandler(c *gin.Context) {
 
 	if playRequest.RoomCode == "" {
 		gameToken := *hash.CreateGameToken()
-		c.Redirect(http.StatusFound, "/game/"+gameToken)
+		c.Redirect(http.StatusFound, "/game/"+gameToken+"?nickname="+playRequest.Nickname)
 		return
 	}
 
@@ -29,7 +29,7 @@ func PlayHandler(c *gin.Context) {
 		return
 	}
 
-	c.Redirect(http.StatusFound, "/game/"+playRequest.RoomCode)
+	c.Redirect(http.StatusFound, "/game/"+playRequest.RoomCode+"?nickname="+playRequest.Nickname)
 
 }
 
@@ -42,8 +42,10 @@ func ServeGame(c *gin.Context) {
 
 	manager.Instance.GetRoom(roomCode)
 
+	nickname := c.Query("nickname")
 	c.HTML(http.StatusOK, "game.tmpl", gin.H{
 		"RoomCode": roomCode,
+		"Nickname": nickname,
 	})
 }
 
@@ -67,7 +69,8 @@ func ServeWS(c *gin.Context) {
 		return
 	}
 
-	client := &client.Client{Conn: conn, Send: make(chan []byte, 256), Code: roomCode}
+	nickname := c.Query("nickname")
+	client := &client.Client{Conn: conn, Send: make(chan []byte, 256), Code: roomCode, Name: nickname}
 	manager.Instance.GetRoom(roomCode)
 	manager.Instance.Register <- client
 

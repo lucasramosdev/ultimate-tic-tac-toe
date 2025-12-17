@@ -10,6 +10,7 @@ type Client struct {
 	Conn   *websocket.Conn
 	Send   chan []byte
 	Player string
+	Name   string
 }
 
 type Message struct {

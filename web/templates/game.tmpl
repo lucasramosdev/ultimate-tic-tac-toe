@@ -28,12 +28,15 @@
 
     <script>
         const roomCode = "{{.RoomCode}}";
+        const nickname = "{{.Nickname}}";
         const wsScheme = window.location.protocol === "https:" ? "wss" : "ws";
-        const wsUrl = `${wsScheme}://${window.location.host}/ws/${roomCode}`;
+        const wsUrl = `${wsScheme}://${window.location.host}/ws/${roomCode}?nickname=${encodeURIComponent(nickname)}`;
 
         let socket = new WebSocket(wsUrl);
-        let myPlayer = "";
+        let myPlayerSymbol = ""; // "X" or "O"
         let isMyTurn = false;
+        let playerXName = "Jogador X";
+        let playerOName = "Jogador O";
 
         let gameState = {
             boards: [],
@@ -76,10 +79,12 @@
         socket.onmessage = (event) => {
             const msg = JSON.parse(event.data);
             if (msg.type === "init") {
-                myPlayer = msg.player;
-
-                statusDiv.textContent = `Você é o jogador: ${myPlayer}`;
+                myPlayerSymbol = msg.player; // "X" or "O"
+                // Waiting for state to know names? Assuming names come in state updates.
+                statusDiv.textContent = `Aguardando início... (Você é ${myPlayerSymbol})`;
             } else if (msg.type === "state") {
+                if (msg.playerXName) playerXName = msg.playerXName;
+                if (msg.playerOName) playerOName = msg.playerOName;
                 updateGame(msg.state);
             }
         };
@@ -87,6 +92,12 @@
         socket.onclose = () => {
             statusDiv.textContent = "Desconectado.";
         };
+
+        function getPlayerName(symbol) {
+            if (symbol === "X") return playerXName;
+            if (symbol === "O") return playerOName;
+            return symbol;
+        }
 
         function updateGame(state) {
             gameState = state;
@@ -96,19 +107,24 @@
                 if (state.winner === "Draw") {
                     statusDiv.textContent = "Empate!";
                 } else {
-                    statusDiv.textContent = `Venceu: ${state.winner}`;
+                    const winnerName = getPlayerName(state.winner);
+                    const loserSymbol = state.winner === "X" ? "O" : "X";
+                    const loserName = getPlayerName(loserSymbol);
+                    statusDiv.textContent = `${winnerName} derrotou ${loserName}`;
                 }
-                statusDiv.style.color = state.winner === myPlayer ? "var(--primary-color)" : "var(--text-color)";
+                statusDiv.style.color = state.winner === myPlayerSymbol ? "var(--primary-color)" : "var(--text-color)";
                 isMyTurn = false;
                 return;
             }
 
-            isMyTurn = (myPlayer === state.turn);
+            const currentTurnName = getPlayerName(state.turn);
+            isMyTurn = (myPlayerSymbol === state.turn);
+
             if (isMyTurn) {
-                statusDiv.textContent = `Sua vez! (${myPlayer})`;
+                statusDiv.textContent = `Sua vez! (${currentTurnName})`;
                 statusDiv.style.color = "var(--primary-color)";
             } else {
-                statusDiv.textContent = `Vez do oponente (${state.turn})`;
+                statusDiv.textContent = `Vez de ${currentTurnName}`;
                 statusDiv.style.color = "var(--text-color)";
             }
         }
@@ -155,7 +171,7 @@
         }
 
         function onCellClick(e) {
-            if (!myPlayer || !isMyTurn) return;
+            if (!myPlayerSymbol || !isMyTurn) return;
 
             const cell = e.target;
             const outerIndex = parseInt(cell.dataset.outerIndex);
