@@ -80,10 +80,9 @@ input::placeholder {
 input:focus {
     background: rgba(0, 0, 0, 0.5);
     border-color: #6366f1;
-    box-shadow: 0 0 0 4px rgba(99, 102, 241, 0.1); /* Glow effect */
+    box-shadow: 0 0 0 4px rgba(99, 102, 241, 0.1);
 }
 
-/* BOTÃO */
 .btn-play {
     width: 100%;
     padding: 16px;
@@ -137,8 +136,63 @@ input:focus {
         opacity: 0;
         transform: translateY(30px);
     }
+
     to {
         opacity: 1;
         transform: translateY(0);
     }
+}
+
+/* Divider Styling */
+.divider {
+    display: flex;
+    align-items: center;
+    text-align: center;
+    margin: 1.5rem 0;
+    color: #64748b;
+}
+
+.divider::before,
+.divider::after {
+    content: '';
+    flex: 1;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.divider span {
+    padding: 0 1rem;
+    font-size: 0.85rem;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+/* Button Variants */
+.btn-create {
+    background: var(--primary-gradient);
+    box-shadow: 0 0 20px rgba(99, 102, 241, 0.4);
+    font-size: 1.1rem;
+}
+
+.btn-create:hover {
+    box-shadow: 0 0 30px rgba(99, 102, 241, 0.6);
+}
+
+.btn-join {
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    box-shadow: none;
+    color: #cbd5e1;
+}
+
+.btn-join:hover {
+    background: rgba(255, 255, 255, 0.1);
+    border-color: rgba(255, 255, 255, 0.3);
+    color: #ffffff;
+    box-shadow: 0 0 15px rgba(255, 255, 255, 0.1);
+}
+
+/* Adjust input group for tighter spacing in join section */
+.join-form .input-group {
+    margin-bottom: 0.8rem;
 }

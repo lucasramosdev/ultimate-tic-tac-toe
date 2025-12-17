@@ -1,73 +1,112 @@
 :root {
-    --bg-color: #121212;
+    --bg-color: #0f172a;
+    --glass-bg: rgba(255, 255, 255, 0.05);
+    --glass-border: rgba(255, 255, 255, 0.1);
+    --primary-gradient: linear-gradient(135deg, #6366f1 0%, #ec4899 100%);
     --text-color: #ffffff;
+
     --primary-color: #00bfa5;
-    /* Teal/Greenish */
     --secondary-color: #ffca28;
-    /* Amber/Yellowish */
-    --accent-color: #6200ea;
-    --board-bg: #1e1e1e;
-    --cell-bg: #2d2d2d;
-    --cell-hover: #3d3d3d;
+
+    --board-bg: var(--glass-bg);
+    --cell-bg: rgba(0, 0, 0, 0.3);
+    --cell-hover: rgba(255, 255, 255, 0.1);
 }
 
 body {
-    font-family: 'Inter', sans-serif;
+    font-family: 'Poppins', sans-serif;
     background-color: var(--bg-color);
+    background-image: radial-gradient(circle at 50% 0%, #2e1065 0%, var(--bg-color) 60%);
     color: var(--text-color);
     display: flex;
     justify-content: center;
     align-items: center;
     height: 100vh;
     margin: 0;
+    overflow: hidden;
+}
+
+.bg-orb {
+    position: absolute;
+    border-radius: 50%;
+    filter: blur(80px);
+    z-index: -1;
+    opacity: 0.6;
+}
+
+.orb-1 {
+    width: 300px;
+    height: 300px;
+    background: #4f46e5;
+    top: -100px;
+    left: -100px;
+}
+
+.orb-2 {
+    width: 250px;
+    height: 250px;
+    background: #db2777;
+    bottom: -50px;
+    right: -50px;
 }
 
 .container {
     text-align: center;
+    max-height: 100vh;
+    overflow-y: auto;
+    padding: 2rem;
+    scrollbar-width: none;
 }
 
 h1 {
     font-size: 3rem;
+    font-weight: 700;
     margin-bottom: 1rem;
-    background: linear-gradient(45deg, var(--primary-color), var(--secondary-color));
-    background-clip: text;
+    background: var(--primary-gradient);
     -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    color: transparent;
+    letter-spacing: -1px;
 }
 
 .status {
     font-size: 1.5rem;
     margin-bottom: 2rem;
     min-height: 2rem;
+    color: #94a3b8;
 }
-
 
 .game-container {
     display: inline-block;
     padding: 20px;
+    animation: floatUp 0.8s cubic-bezier(0.2, 0.8, 0.2, 1);
 }
 
 .outer-board {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
     gap: 15px;
-    background-color: var(--board-bg);
+    background: var(--board-bg);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border: 1px solid var(--glass-border);
     padding: 15px;
-    border-radius: 15px;
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+    border-radius: 24px;
+    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
 }
 
 .outer-cell {
     position: relative;
     background-color: var(--cell-bg);
     padding: 5px;
-    border-radius: 8px;
-    transition: box-shadow 0.3s;
+    border-radius: 16px;
+    transition: box-shadow 0.3s, background-color 0.3s;
+    border: 1px solid transparent;
 }
 
 .outer-cell.active {
-    box-shadow: 0 0 10px 2px var(--primary-color);
-    border: 1px solid var(--primary-color);
+    box-shadow: 0 0 15px rgba(99, 102, 241, 0.3);
+    border: 1px solid #6366f1;
 }
 
 .inner-board {
@@ -79,7 +118,7 @@ h1 {
 .inner-cell {
     width: 40px;
     height: 40px;
-    background-color: #333;
+    background-color: rgba(255, 255, 255, 0.03);
     display: flex;
     justify-content: center;
     align-items: center;
@@ -90,15 +129,17 @@ h1 {
 }
 
 .inner-cell:hover {
-    background-color: #444;
+    background-color: var(--cell-hover);
 }
 
 .inner-cell.x {
     color: var(--primary-color);
+    text-shadow: 0 0 8px rgba(0, 191, 165, 0.4);
 }
 
 .inner-cell.o {
     color: var(--secondary-color);
+    text-shadow: 0 0 8px rgba(255, 202, 40, 0.4);
 }
 
 .winner-overlay {
@@ -111,10 +152,10 @@ h1 {
     justify-content: center;
     align-items: center;
     font-size: 6rem;
-    background-color: rgba(0, 0, 0, 0.7);
-    border-radius: 8px;
+    background-color: rgba(15, 23, 42, 0.85);
+    border-radius: 16px;
     pointer-events: none;
-    /* Let clicks pass through if needed, though usually won means no clicks */
+    z-index: 10;
 }
 
 .winner-overlay.x {
@@ -128,5 +169,17 @@ h1 {
 .message {
     margin-top: 2rem;
     font-size: 1.2rem;
-    color: #aaa;
+    color: #94a3b8;
+}
+
+@keyframes floatUp {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
 }
